@@ -161,3 +161,157 @@ Users can personalize their profiles with:
 ---
 
 ## 📂 Project Structure
+
+```
+
+DealWalker
+│
+├── app.py
+│
+├── templates
+│   ├── auth.html
+│   ├── home.html
+│   ├── auctioneer.html
+│   ├── bidder.html
+│   ├── forgot_password.html
+│   └── reset_password.html
+│
+├── static
+│   ├── css
+│   ├── js
+│   └── images
+│
+├── .env
+├── requirements.txt
+└── README.md
+
+````
+
+---
+
+## ⚙️ Installation Guide
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/dealwalker.git
+cd dealwalker
+````
+
+---
+
+### 2️⃣ Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Activate environment
+
+Windows
+
+```
+venv\Scripts\activate
+```
+
+Mac / Linux
+
+```
+source venv/bin/activate
+```
+
+---
+
+### 3️⃣ Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+---
+
+### 4️⃣ Configure Environment Variables
+
+Create `.env` file
+
+```
+SECRET_KEY=your_secret_key
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+```
+
+---
+
+### 5️⃣ Configure MongoDB
+
+Update the MongoDB connection string in the application.
+
+```python
+MongoClient("your_mongodb_connection_string")
+```
+
+---
+
+### 6️⃣ Run the Application
+
+```bash
+python app.py
+```
+
+Open browser:
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## 🔄 System Workflow
+
+1️⃣ User registers and verifies email via OTP
+2️⃣ User logs in as **Auctioneer or Bidder**
+3️⃣ Auctioneer posts an item with starting price
+4️⃣ Bidders place bids in real time
+5️⃣ WebSocket broadcasts updated highest bid
+6️⃣ Auction automatically closes at scheduled time
+7️⃣ Winner is declared and auction record is removed
+
+---
+
+## 🔒 Security Features
+
+* Password hashing using **bcrypt**
+* Secure token-based password reset
+* Email verification before account access
+* Role-based access control
+* Protected user sessions
+
+---
+
+## 🚀 Future Enhancements
+
+* Online payment integration
+* Bid history tracking
+* Auction category filters
+* Real-time chat for bidders
+* Mobile responsive UI
+* Admin dashboard
+* Auction countdown timer
+* Notification system
+
+---
+
+## 👨‍💻 Author
+
+**M. Giftson Raj**
+Full Stack Developer
+
+### Portfolio Projects
+
+* 🏆 **DealWalker** – Real-Time Auction Platform
+* 🤟 **ISL Translation Platform** – 3D Sign Language Communication System
+* 🩺 **Pneumonia Detection System** – AI-based medical diagnosis platform
+
+---
+
+⭐ If you found this project useful, consider **starring the repository**!
