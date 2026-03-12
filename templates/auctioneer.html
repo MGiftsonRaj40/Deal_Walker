@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DealWalker - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/icon.jpeg') }}">
+</head>
+<body>
+  <div id="bg-layer">
+    <video id="bgvid" autoplay loop muted playsinline>
+      <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4">
+    </video>
+  </div>
+  
+  <header>
+    <div class="logo">
+      <img src="../static/icons/logo-removebg.png" alt="DealWalker-Logo">
+      <div class="s-div">
+        <h1>DealWalker</h1>
+        <p class="slogan">Find, Bid, Win – Where Every Bid Counts</p>        
+      </div>
+    </div>
+    <div class="navigate">
+      <div class="nav-highlight" id="highlight"></div>
+      <nav>
+        <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('home') }}#contact" class="nav-link">Contact</a>
+        <a href="{{ url_for('logout') }}" style="padding: 8px 16px; background-color: #ff00003c; border-radius: 5px;">Logout</a>
+      </nav>
+      <button id="color"><i class="fa-solid fa-brush"></i></button>
+    </div>
+  </header>
+
+    <div id="space2">
+    <div class="whole-owl2">
+      <img class="owl2" src="../static/imgs/owl.png" alt="" id="owl-mover" onclick="">
+      <div class="eye-space2" id="eyes">
+        <div class="eyes2">
+          <div class="eyelid2"></div>
+        </div>
+        <div class="eyes2">
+          <div class="eyelid2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <aside id="user-nav">
+      <div class="profile">
+        <form id="upload-form" action="{{ url_for('upload_avatar') }}" method="POST" enctype="multipart/form-data">
+          <button type="button" id="user-profile" data-role="{{ role }}">
+            <img src="{{ url_for('avatar', username=username) }}" alt="Profile">
+          </button>
+          <label for="avatar-file">
+            <i class="fa-solid fa-camera"></i>
+          </label>
+          <input type="file" name="avatar" id="avatar-file" accept="image/*" onchange="document.getElementById('upload-form').submit();">
+        </form>
+
+        <div class="user-info">
+          <p style="margin-bottom: 10px; font-size: 20px;"><strong>{{ username }}</strong></p>
+          <p>Auctions Posted: {{ auctions_attended }} </p>
+          <p>Auctions Success: {{ auctions_won }} </p>
+        </div>
+
+        <nav class="user-nav-links">
+          <a href="{{ url_for('home') }}">Home</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+      </div>
+    </aside>
+
+  <section id="live-auctions">
+  <h2>Live Auctions</h2>
+  {% if auctions %}
+    {% for item in auctions %}
+    <div class="auction-card" 
+        data-id="{{ item._id }}"
+        data-end-time="{{ item.end_time[:5] }}"
+        data-status="{{ item.status }}" 
+        data-winner="{{ item.winner or '' }}">
+        <div class="auction-img-disc">
+          <div class="auction-img">
+            <img src="{{ url_for('get_image', image_id=item.image_id) }}"
+                loading="lazy"
+                class="zoom-img"
+                onclick="zoomImage(this)"
+                width="200">
+          </div>
+          <div class="auction-disc">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p><br>
+              <p class="max-bid-text" id="max-bid-{{ item._id }}">
+                <span>Max Bid: </span>₹{{ item.max_bid }}
+                {% if item.max_bidder not in ['null', 'None', '', None] %}
+                  <br><span class="bidder-name">by {{ item.max_bidder }}</span>
+                {% else %}
+                  <br><span class="no-bid">No bids yet</span>
+                {% endif %}
+              </p>
+            <br>
+            <p><span>End Time: </span>{{ item.end_time }}</p>
+            <p><span class="countdown" data-end-time="{{ item.end_time }}"></span></p>
+            <p><span>Posted by: </span>{{ item.posted_by }}</p>
+            {% if item.is_ended %}
+              <p class="ended-label">
+                {% if item.winner %}
+                  Auction ended.<br>
+                  Winner: {{ item.winner }}
+                {% else %}
+                  Auction closed (no bids)
+                {% endif %}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="auction-btn-div">
+          <form action="/delete/{{ item._id }}" method="POST" onsubmit="return confirm('Delete this item?');">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+          <form action="/end_auction/{{ item._id }}" method="POST" 
+                onsubmit="endCountdownImmediately('{{ item._id }}'); return confirm('End this auction?');">
+            <button type="submit" class="btn btn-warning">End Auction</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No auctions posted yet.</p>
+  {% endif %}
+</section>
+
+    <section id="updater" class="auction-form-section"> 
+      <h2 class="form-title">Post an Auction Item</h2>
+      <form class="auction-form" action="/post-auction" method="POST" enctype="multipart/form-data">
+        
+        <label class="form-label">Name:</label>
+        <input class="form-input" type="text" name="name" required>
+
+        <label class="form-label">Description:</label>
+        <input class="form-input" type="text" name="description" required>
+
+        <div class="file-upload">
+          <label for="image-input" class="custom-file-label">📁 Choose Image</label>
+          <input type="file" id="image-input" name="image" accept="image/*" onchange="previewImage(event)">
+          <span id="fileName">No file chosen</span>
+
+          <div id="preview-container" style="display:none; position: relative; margin-top: 10px;">
+            <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; display: block;" />
+            <button type="button" onclick="removePreview()" style="position: absolute; top: 15px; right: 5px; background: #f44336; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer;">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="end_time">End Time:</label>
+          <input type="time" name="end_time" id="end_time" required>
+        </div>
+
+        <div class="form-group">
+          <label for="initial_amount">Initial Amount:</label>
+          <div class="currency-input">
+            <span class="currency-symbol">₹</span>
+            <input type="number" name="initial_amount" id="initial_amount" required>
+          </div>
+        </div>
+      </div>
+      <div class="quick-buttons-div">
+        <div class="quick-button-input">
+          <label class="form-label">Bid Button 1:</label>
+          <div class="qbi">
+            <p>₹</p>
+              <input class="form-input" type="number" name="quick_bids" placeholder="e.g. 100" required>  
+          </div>   
+        </div>
+
+        <div class="quick-button-input">
+          <label class="form-label">Bid Button 2:</label>
+          <div class="qbi">
+            <p>₹</p>
+            <input class="form-input" type="number" name="quick_bids" placeholder="e.g. 1000" required>  
+          </div>  
+        </div>
+
+        <div class="quick-button-input">
+          <label class="form-label">Bid Button 3:</label>
+          <div class="qbi">
+            <p>₹</p>
+            <input class="form-input" type="number" name="quick_bids" placeholder="e.g. 10000" required>
+          </div>
+        </div>
+      </div>
+
+        <button class="form-button" type="submit">Post</button>
+      </form>
+    </section>
+
+  <footer>
+    <div>
+      <h2>Contact Us</h2>
+      <p>
+        <i class="fas fa-envelope"></i>
+        &nbsp; support@dealwalker.com &nbsp; &nbsp; 
+        <i class="fas fa-phone"></i>
+        &nbsp; +91 98765 43210 &nbsp; &nbsp;
+        <i class="fas fa-map-marker-alt"></i>
+        &nbsp; Chennai, India</p>
+      <div class="social-icons">
+    </div>
+    <p>&copy; 2025 DealWalker. All rights reserved.</p>
+  </footer>
+
+<!-- Load Socket.IO first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+<script>
+  document.addEventListener('wheel', function(event) {
+    if (document.activeElement.type === 'number') {
+      document.activeElement.blur(); // Removes focus to prevent scroll
+    }
+  });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const currentUser = "{{ username }}";
+  const socket = io();
+
+  // ===== Handle Closed Auctions =====
+  function handleClosedAuctions() {
+    // === 1. Disable Closed Auctions Initially ===
+    document.querySelectorAll('.auction-card[data-status="closed"]').forEach(card => {
+      const disc = card.querySelector('.auction-disc');
+      card.querySelector('.auction-ended')?.remove();
+      card.querySelector('.ended-label')?.remove();
+      card.querySelector('.expand-btn')?.remove();
+      card.querySelector('.bid-form')?.remove();
+      disc.insertAdjacentHTML('beforeend',
+        `<p class="auction-ended">Auction ended.<br>Winner: ${card.dataset.winner || 'None'}</p>`
+      );
+      setTimeout(() => card.remove(), 2 * 60 * 1000);
+    });
+  }
+
+  const updateCountdowns = () => {
+    const now = new Date();
+    document.querySelectorAll(".auction-card").forEach(card => {
+      const countdownElem = card.querySelector(".countdown");
+      if (!countdownElem) return;
+
+      const endTimeStr = countdownElem.dataset.endTime;
+      const [h, m] = endTimeStr.split(":").map(Number);
+      const endTime = new Date();
+      endTime.setHours(h, m, 0, 0);
+
+      let diff = endTime - now;
+      if (diff <= 0) {
+        countdownElem.style.dsplay = "none";
+
+        // If not already scheduled for removal, schedule removal after 30s
+        if (!card.dataset.removalScheduled) {
+          card.dataset.removalScheduled = "true";
+          setTimeout(() => {
+            card.remove();
+          }, 10_000); // 10 seconds
+        }
+      } else {
+        const totalSeconds = Math.floor(diff / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        countdownElem.textContent = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+    });
+  };
+    function endCountdownImmediately(auctionId) {
+    const card = document.querySelector(`.auction-card[data-id='${auctionId}']`);
+    if (!card) return;
+    const countdownElem = card.querySelector(".countdown");
+    if (countdownElem) {
+      countdownElem.textContent = "00:00:00";
+      card.classList.add("ended-now"); 
+    }
+  }
+
+  updateCountdowns();
+  setInterval(updateCountdowns, 1000);
+
+  // === 2. Real-Time Bid Update from Server ===
+  socket.on('bid_updated', ({ auction_id, new_max_bid, bidder }) => {
+    const el = document.getElementById(`max-bid-${auction_id}`);
+    if (el) {
+      el.innerHTML = `
+        <span>Max Bid: </span>₹${new_max_bid}<br>
+        <span class="bidder-name">by ${bidder}</span>
+      `;
+    }
+    updateBidFormState(auction_id, bidder);
+  });
+
+  // ===== Live Max Bid Update =====
+  function setupBidUpdateListener() {
+    socket.on('bid_updated', ({ auction_id, new_max_bid, bidder }) => {
+      const el = document.getElementById(`max-bid-${auction_id}`);
+      if (el) {
+        el.innerHTML = `
+          <span>Max Bid: </span>₹${new_max_bid}<br>
+          <span class="bidder-name">by ${bidder}</span>
+        `;
+      }
+    });
+  }
+
+  // ===== Navigation Highlight =====
+  function setupNavHighlight() {
+    const highlight = document.getElementById('highlight');
+    const links = document.querySelectorAll('.nav-link');
+    const currentPath = window.location.pathname;
+
+    const activeLink = Array.from(links).find(link => {
+      const href = link.getAttribute('href');
+      return href === currentPath || (href !== '/' && currentPath.startsWith(href));
+    }) || document.querySelector('.nav-link[href="/home"]');
+
+    function moveHighlight(link) {
+      const rect = link.getBoundingClientRect();
+      const nav = link.parentElement?.getBoundingClientRect();
+      if (rect && nav && highlight) {
+        highlight.style.width = `${rect.width}px`;
+        highlight.style.left = `${rect.left - nav.left}px`;
+      }
+    }
+
+    if (activeLink) {
+      activeLink.classList.add('active');
+      moveHighlight(activeLink);
+    }
+
+    links.forEach(link => {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        moveHighlight(link);
+        const targetURL = this.href;
+        setTimeout(() => {
+          window.location.href = targetURL;
+        }, 500);
+      });
+    });
+  }
+
+  // ===== Role-based Redirect =====
+  window.redirectByRole = function (elem) {
+    const role = (elem.getAttribute("data-role") || "").toLowerCase();
+    setTimeout(() => {
+      switch (role) {
+        case "auctioneer":
+          window.location.href = "/auctioneer";
+          break;
+        case "bidder":
+          window.location.href = "/bidder";
+          break;
+        default:
+          console.warn("Invalid role:", role);
+      }
+    }, 500);
+  };
+
+  // ===== Initialize All =====
+  handleClosedAuctions();
+  setupBidUpdateListener();
+  setupNavHighlight();
+});
+setInterval(updateCountdowns, 1000); // updates every second
+</script>
+</body>
+</html>

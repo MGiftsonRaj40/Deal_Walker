@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DealWalker - Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/icon.jpeg') }}">
+</head>
+<body>
+  <div id="bg-layer">
+    <video id="bgvid" autoplay loop muted playsinline>
+      <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4">
+    </video>
+  </div>
+  
+  <header>
+    <div class="logo">
+      <img src="../static/icons/logo-removebg.png" alt="DealWalker-Logo">
+      <div class="s-div">
+        <h1>DealWalker</h1>
+        <p class="slogan">Find, Bid, Win – Where Every Bid Counts</p>        
+      </div>
+    </div>
+    <div class="navigate">
+      <div class="nav-highlight" id="highlight"></div>
+      <nav>
+        <a href="{{ url_for('home') }}#about" class="nav-link">About</a>
+        <a href="{{ url_for('home') }}#contact" class="nav-link">Contact</a>
+        <button class="nav-link" data-role="{{ role }}" style="background: none; border: none; cursor: pointer; font-weight: 600; font-size: 16px;">Auction</button>
+        <a href="{{ url_for('logout') }}" style="padding: 8px 16px; background-color: #ff00003c; border-radius: 5px;">Logout</a>
+      </nav>
+      <button id="color"><i class="fa-solid fa-brush"></i></button>
+    </div>
+  </header>
+
+  <section id="home">
+    <div>
+      <h2>Welcome, <span class="colorTitle">{{ username }}</span>!</h2>
+      <p>You are logged in as <strong>{{ role.capitalize() }}</strong>.</p>
+    </div>
+    <div class="profile">
+      <form id="upload-form" action="{{ url_for('upload_avatar') }}" method="POST" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" id="user-profile" data-role="{{ role }}" style="background: none; border: none; cursor: pointer;">
+          <img src="{{ url_for('avatar', username=username) }}" alt="Profile" width="40" height="40" style="border-radius: 50%;">
+        </button>
+
+        <label for="avatar-file" style="cursor: pointer;">
+          <i class="fa-solid fa-camera" style="font-size: 18px;"></i>
+        </label>
+        <input type="file" name="avatar" id="avatar-file" accept="image/*" style="display: none;" onchange="document.getElementById('upload-form').submit();">
+      </form>
+    </div>
+  </section><br>
+
+  <section id="about">
+    <h2 class="colorSub">About DealWalker</h2>
+    <p><strong>DealWalker</strong> is a dynamic <em>live auction platform</em> that brings together buyers and sellers in a fast-paced, transparent, and interactive environment. Our goal is to revolutionize how online auctions work by offering a seamless, real-time bidding experience that’s accessible to everyone.</p>
+
+    <p>Whether you're a seasoned seller looking to maximize your reach or a buyer searching for exclusive deals, DealWalker makes the process <strong>easy, exciting, and fair</strong>.</p>
+  </section>
+
+  <section>
+    <h3 class="colorSub">Key Features:</h3>
+      <ul>
+        <li><strong>Real-time Bidding</strong>: Participate in live auctions with countdown timers and instant updates.</li>
+        <li><strong>Create or Join Rooms</strong>: Start your own auction room or join public/private rooms hosted by others.</li>
+        <li><strong>Smart Notifications</strong>: Stay informed about bid changes, timeouts, and auction outcomes.</li>
+        <li><strong>User Roles</strong>: Distinct access and features for Admins, Sellers, and Bidders.</li>
+        <li><strong>Mobile-Friendly Interface</strong>: Bid or host auctions on the go, anytime.</li>
+      </ul><br>
+
+      <h3 class="colorSub">Our Mission:</h3>
+      <p>To empower individuals and businesses by providing a secure, fast, and fun platform to trade goods through competitive live auctions.</p>
+  </section><br>
+    
+  <section>
+    <h3 class="colorSub">Our Community:</h3>
+    <p>From vintage collectors to everyday deal-seekers, our community is diverse and growing. We believe in <strong>fair play, transparency, and user satisfaction</strong>.</p>
+
+    <p class="highlight">Join the DealWalker experience today — <em>Find, Bid, Win – Where Every Bid Counts!</em></p>
+  </section><br>
+
+<section id="contact">
+  <h2 class="colorSub">Contact Us</h2>
+  
+  <div class="contact-container">
+    <!-- Contact Form -->
+    <form action="/send-message" method="POST" class="contact-form">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+
+    <!-- Contact Info & Social Links -->
+    <div class="contact-info">
+      <p><i class="fas fa-envelope"></i> support@dealwalker.com</p>
+      <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+      <p><i class="fas fa-map-marker-alt"></i> Chennai, India</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <div id="space">
+    <a class="whole-owl" href="#">
+      <img class="owl" src="../static/imgs/owl.png" alt="">
+      <div class="eye-space">
+        <div class="eyes">
+          <div class="eyelid"></div>
+        </div>
+        <div class="eyes">
+          <div class="eyelid"></div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <footer>
+    <div>
+      <h2>Contact Us</h2>
+      <p>
+        <i class="fas fa-envelope"></i>
+        &nbsp; support@dealwalker.com &nbsp; &nbsp; 
+        <i class="fas fa-phone"></i>
+        &nbsp; +91 98765 43210 &nbsp; &nbsp;
+        <i class="fas fa-map-marker-alt"></i>
+        &nbsp; Chennai, India</p>
+      <div class="social-icons">
+    </div>
+    <p>&copy; 2025 DealWalker. All rights reserved.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const highlight = document.getElementById('highlight');
+    const links = document.querySelectorAll('.nav-link');
+
+    function moveHighlight(link) {
+      const rect = link.getBoundingClientRect();
+      const nav = link.parentElement.getBoundingClientRect();
+      highlight.style.width = `${rect.width}px`;
+      highlight.style.left = `${rect.left - nav.left}px`;
+    }
+
+    // Set active link based on current path
+    let activeLink = null;
+    const currentPath = window.location.pathname;
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === currentPath || currentPath.startsWith(href)) {
+        activeLink = link;
+      }
+    });
+    if (!activeLink) {
+      activeLink = document.querySelector('.nav-link[href="/home"]');
+    }
+    if (activeLink) {
+      activeLink.classList.add('active');
+      moveHighlight(activeLink);
+    }
+
+    // Highlight on click
+    links.forEach(link => {
+      link.addEventListener('click', () => moveHighlight(link));
+    });
+
+    // Delay navigation with role support
+    const navLinks = document.querySelectorAll("nav .nav-link");
+    navLinks.forEach(link => {
+      link.addEventListener("click", function (event) {
+        const role = this.getAttribute("data-role");
+        const targetURL = this.href;
+
+        // Prevent default to delay nav
+        event.preventDefault();
+
+        setTimeout(() => {
+          if (role === "auctioneer") window.location.href = "/auctioneer";
+          else if (role === "bidder") window.location.href = "/bidder";
+          else window.location.href = targetURL;
+        }, 500);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

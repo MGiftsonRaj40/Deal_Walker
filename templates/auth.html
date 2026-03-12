@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Auth</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="bg-layer"></div>
+  <button id="color"><i class="fa-solid fa-brush"></i></button>
+  <div class="container" style="margin-top: 15vh;">
+    <input type="checkbox" id="toggle" hidden>
+    <label for="toggle" class="tab">
+      <span class="signin-tab">Sign In</span>
+      <span class="signup-tab">Sign Up</span>
+    </label>
+
+    <!-- SIGN IN FORM -->
+    <form method="POST" class="auth-form signin-form">
+      <input type="hidden" name="mode" value="signin">
+      <h2>Sign In</h2>
+      <input name="email" type="email" placeholder="Email" required>
+
+      <div class="password-field">
+        <input name="password" type="password" placeholder="Password" id="signin-password" required>
+        <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+      </div>
+
+      <div class="role-selection">
+        <input type="radio" id="signin-auctioneer" name="role" value="auctioneer" required>
+        <label for="signin-auctioneer">Auctioneer</label>
+        <input type="radio" id="signin-bidder" name="role" value="bidder" required>
+        <label for="signin-bidder">Bidder</label>
+      </div>
+      <div class="remember-me">
+        <input type="checkbox" id="remember" name="remember">
+        <label for="remember">Remember Me</label>
+      </div>
+      <button type="submit">Sign In</button>
+
+      <input type="hidden" id="loginFailedFlag" value="{{ 'true' if login_failed else 'false' }}">
+      <p id="forgotPasswordLink" style="display: none;">
+        <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+      </p>
+      
+    </form>
+
+    <!-- SIGN UP FORM -->
+    <form method="POST" class="auth-form signup-form">
+      <input type="hidden" name="mode" value="signup">
+      <h2>Sign Up</h2>
+      <input name="username" type="text" placeholder="Username" required>
+      <input name="email" type="email" placeholder="Email" required>
+
+      <div class="password-field">
+        <input name="password" type="password" placeholder="Password" id="signin-password" required>
+        <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+      </div>
+
+      <div class="role-selection">
+        <input type="radio" id="signup-auctioneer" name="role" value="auctioneer" required>
+        <label for="signup-auctioneer">Auctioneer</label>
+        <input type="radio" id="signup-bidder" name="role" value="bidder" required>
+        <label for="signup-bidder">Bidder</label>
+      </div>
+
+      <!-- Verification Code Field -->
+      <input name="code" type="text" placeholder="Verification Code (Check Email)" id="code-field" style="display:none;">
+      <button type="button" onclick="sendCode()">Send Code</button>
+
+      <button type="submit">Sign Up</button><br>
+    </form>
+
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in msgs %}
+        <div class="alert {{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const failed = document.getElementById("loginFailedFlag")?.value === "true";
+      if (failed) {
+        document.getElementById("forgotPasswordLink").style.display = "block";
+      }
+      const rmCheck = document.getElementById('remember');
+      const emailInput = document.querySelector('.signin-form input[name="email"]');
+
+      // On page load: restore saved email and checkbox state from localStorage
+      if (localStorage.getItem('remember') === 'true') {
+        rmCheck.checked = true;
+        emailInput.value = localStorage.getItem('email') || '';
+      } else {
+        rmCheck.checked = false;
+      }
+
+      // On form submission: store or clear data based on checkbox state
+      document.querySelector('.signin-form').addEventListener('submit', () => {
+        if (rmCheck.checked && emailInput.value.trim() !== '') {
+          localStorage.setItem('email', emailInput.value.trim());
+          localStorage.setItem('remember', 'true');
+        } else {
+          localStorage.removeItem('email');
+          localStorage.setItem('remember', 'false');
+        }
+      });
+    });
+
+    const input = toggle.previousElementSibling;
+    const icon = toggle.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+
+
+    function sendCode() {
+      const email = document.querySelector('.signup-form input[name="email"]').value;
+      if (!email) {
+        alert("Please enter your email first.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("email", email);
+
+      fetch("/send-code", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.status === "success") {
+          document.getElementById("code-field").style.display = "block";
+        }
+      })
+      .catch(err => alert("Something went wrong while sending the code."));
+    }
+  </script>
+
+</body>
+</html>
