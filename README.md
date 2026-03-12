@@ -1,298 +1,163 @@
-# DealWalker – Real-Time Online Auction Platform
+# 🚀 DealWalker – Real-Time Online Auction Platform
 
-DealWalker is a **real-time online auction web application** where users can **post items for auction and place live bids**.
-The platform supports **two roles: Auctioneer and Bidder**, real-time bidding updates, secure authentication, email verification, and automatic auction closing.
-
-The system is built using **Flask, MongoDB, Socket.IO, and GridFS** for scalable real-time auction management.
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Socket.IO](https://img.shields.io/badge/Socket.IO-black?style=for-the-badge&logo=socket.io)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-13AA52?style=for-the-badge&logo=mongodb)
 
 ---
 
-# Project Overview
+## 📌 Project Overview
 
-DealWalker allows users to participate in an online auction system with real-time interaction.
+**DealWalker** is a **real-time online auction platform** that enables users to create and participate in auctions through an interactive web interface.
 
-![DealWalker LogIn](images/4.png)
+The system supports **two user roles:**
 
+- 🧑‍💼 **Auctioneer** – Creates and manages auctions  
+- 🧑‍💻 **Bidder** – Participates in auctions by placing bids  
+
+The platform uses **Flask + MongoDB + WebSockets (Socket.IO)** to provide **instant bid updates and live auction interactions**.
+
+It also integrates **email verification, password recovery, real-time notifications, and automated auction scheduling**.
+
+---
+
+## 🖥️ Application Screenshots
+
+### 🔐 Login & Authentication
+![DealWalker Login](images/4.png)
+
+### 📦 Post Auction Item
 ![DealWalker Post Auction](images/2.png)
 
+### 🏠 Auction Home Page
 ![DealWalker Home](images/1.png)
 
-![DealWalker Home](images/3.png)
-
-
-Auctioneers can:
-
-* Post items for auction
-* Set starting prices
-* Upload item images
-* End auctions manually or automatically
-* Track auction performance
-
-Bidders can:
-
-* View all active auctions
-* Place live bids
-* See real-time updates
-* Track auctions attended and won
-
-The system uses **WebSockets for real-time bidding updates** and **APScheduler for automatic auction closing**.
+### ⚡ Live Bidding Interface
+![DealWalker Bidding](images/3.png)
 
 ---
 
-# Features
+## 🎯 Key Features
 
-### User Authentication
-
-* Secure **Sign Up and Sign In**
-* **Email verification using OTP**
-* **Password hashing with Flask-Bcrypt**
-* **Password reset via email link**
-
-### Role Based Access
-
-Two user roles are supported:
-
-**Auctioneer**
-
-* Post new auctions
-* Upload item images
-* View posted auctions
-* Close auctions
-* Delete auctions
-
-**Bidder**
-
-* View active auctions
-* Place bids
-* Real-time bid updates
-* Track auctions attended and won
+### 🔐 User Authentication
+- Secure **Sign Up & Sign In**
+- **Email verification using OTP**
+- **Password hashing using Flask-Bcrypt**
+- **Password reset via secure email token**
+- Session management using **Flask-Login**
 
 ---
 
-### Real-Time Bidding
+### 👥 Role-Based Access Control
 
-* Implemented using **Flask-SocketIO**
-* Instant updates when a bid is placed
-* Automatic update of highest bid and bidder
-* Real-time auction closing notifications
+The system provides separate dashboards for each role.
 
----
+#### 🧑‍💼 Auctioneer
+- Create and post auction items
+- Upload product images
+- Set initial auction price
+- Monitor live bids
+- Manually close auctions
+- Delete auction listings
+- Track auction success statistics
 
-### Auction Management
-
-* Schedule automatic auction closing
-* Manual auction termination
-* Automatic deletion of closed auctions
-* Background cleanup of stale auctions
-
----
-
-### Image Storage
-
-* Auction images stored using **MongoDB GridFS**
-* Image resizing using **Pillow (PIL)**
-* Cached image delivery for performance
+#### 🧑‍💻 Bidder
+- Browse all active auctions
+- Place bids in real time
+- View current highest bid
+- Track auctions participated in
+- Track auctions won
 
 ---
 
-### Email Services
+### ⚡ Real-Time Bidding System
 
-* Email verification code during signup
-* Password reset link via email
-* SMTP email integration using **Flask-Mail**
+Implemented using **Flask-SocketIO** for live communication.
 
----
+Features include:
 
-### Profile Management
-
-* User avatar upload
-* Profile statistics tracking
-* Auction participation metrics
+- Instant bid updates across all clients
+- Real-time highest bidder tracking
+- Live auction status updates
+- Automatic auction close notifications
 
 ---
 
-# Tech Stack
+### ⏱️ Automated Auction Management
 
-### Backend
-
-* Python
-* Flask
-* Flask-Login
-* Flask-SocketIO
-* Flask-Bcrypt
-* Flask-Mail
-
-### Database
-
-* MongoDB Atlas
-* GridFS (image storage)
-
-### Real-Time Communication
-
-* Socket.IO
-* Eventlet
-
-### Scheduling
-
-* APScheduler
-
-### Image Processing
-
-* Pillow (PIL)
-
-### Frontend
-
-* HTML
-* CSS
-* JavaScript
+- Automatic auction closing using **APScheduler**
+- Manual auction termination by auctioneer
+- Automatic deletion of completed auctions
+- Periodic background cleanup of expired auctions
 
 ---
 
-# Project Structure
+### 🖼️ Image Storage & Processing
 
-```
-DealWalker
-│
-├── app.py
-├── templates
-│   ├── auth.html
-│   ├── home.html
-│   ├── auctioneer.html
-│   ├── bidder.html
-│   ├── forgot_password.html
-│   ├── reset_password.html
-│
-├── static
-│   ├── css
-│   ├── js
-│   ├── images
-│
-├── .env
-├── requirements.txt
-└── README.md
-```
+Auction images are handled efficiently using:
+
+- **MongoDB GridFS** for storing large files
+- **Pillow (PIL)** for image resizing
+- Optimized image delivery with caching
 
 ---
 
-# Installation
+### 📧 Email Services
 
-### 1 Clone the Repository
+The platform integrates **Flask-Mail** for communication.
 
-```bash
-git clone https://github.com/yourusername/dealwalker.git
-cd dealwalker
-```
+Supported email features:
 
----
-
-### 2 Create Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-Activate:
-
-Windows
-
-```
-venv\Scripts\activate
-```
-
-Mac/Linux
-
-```
-source venv/bin/activate
-```
+- Account verification during signup
+- Password reset email links
+- Secure email-based authentication flows
 
 ---
 
-### 3 Install Dependencies
+### 👤 User Profile Management
 
-```bash
-pip install -r requirements.txt
-```
+Users can personalize their profiles with:
 
----
-
-### 4 Configure Environment Variables
-
-Create a `.env` file:
-
-```
-SECRET_KEY=your_secret_key
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password
-```
+- Avatar uploads
+- Profile statistics
+- Auction performance tracking
 
 ---
 
-### 5 Configure MongoDB
+## 🧰 Technology Stack
 
-Update your MongoDB connection string:
+### 🔹 Backend
+- Python
+- Flask
+- Flask-Login
+- Flask-SocketIO
+- Flask-Bcrypt
+- Flask-Mail
 
-```python
-MongoClient("your_mongodb_connection_string")
-```
+### 🔹 Database
+- MongoDB Atlas
+- GridFS (for file storage)
 
----
+### 🔹 Real-Time Communication
+- Socket.IO
+- Eventlet
 
-### 6 Run the Application
+### 🔹 Task Scheduling
+- APScheduler
 
-```bash
-python app.py
-```
+### 🔹 Image Processing
+- Pillow (PIL)
 
-Open in browser:
-
-```
-http://127.0.0.1:5000
-```
-
----
-
-# How the System Works
-
-1. Users sign up and verify email using OTP
-2. Users log in as **Auctioneer or Bidder**
-3. Auctioneers create auctions with images and start price
-4. Bidders place bids in real time
-5. Highest bid is updated instantly for all users
-6. Auction closes automatically at scheduled time
-7. Winner is announced and auction is removed after cleanup
+### 🔹 Frontend
+- HTML5
+- CSS3
+- JavaScript
 
 ---
 
-# Security Features
-
-* Password hashing with **bcrypt**
-* Email verification before login
-* Token based password reset
-* Role based access control
-* Session protection
-
----
-
-# Future Improvements
-
-* Payment gateway integration
-* Bid history tracking
-* Auction categories and filters
-* Real-time chat for auctions
-* Mobile responsive UI
-* Admin dashboard
-* Auction timer countdown
-
----
-
-# Author
-
-**M. Giftson Raj**
-
-Full Stack Developer
-
-Portfolio Projects
-
-* DealWalker – Real-Time Auction Platform
-* ISL Translation Platform (3D Sign Language)
-* Pneumonia Detection System
+## 📂 Project Structure
