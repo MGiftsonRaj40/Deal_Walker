@@ -1,8 +1,3 @@
-Here is a **clean GitHub README.md** you can use for your **DealWalker Auction Platform**.
-It is written professionally and suitable for your portfolio.
-
----
-
 # DealWalker – Real-Time Online Auction Platform
 
 DealWalker is a **real-time online auction web application** where users can **post items for auction and place live bids**.
@@ -16,6 +11,13 @@ The system is built using **Flask, MongoDB, Socket.IO, and GridFS** for scalable
 
 DealWalker allows users to participate in an online auction system with real-time interaction.
 
+![DealWalker LogIn](images/4.png)
+
+![DealWalker Post Auction](images/2.png)
+
+![DealWalker Home](images/1.png)
+
+![DealWalker Home](images/3.png)
 
 
 Auctioneers can:
