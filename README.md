@@ -1,8 +1,3 @@
-Here is a **clean GitHub README.md** you can use for your **DealWalker Auction Platform**.
-It is written professionally and suitable for your portfolio.
-
----
-
 # DealWalker – Real-Time Online Auction Platform
 
 DealWalker is a **real-time online auction web application** where users can **post items for auction and place live bids**.
